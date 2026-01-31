@@ -7,7 +7,7 @@ Let an agent log in to Jike via QR code (web flow), periodically fetch the "foll
 1) **Create session**: `POST https://api.ruguoapp.com/sessions.create`
    - Response JSON: `{ "uuid": "<uuid>" }`
 2) **Generate QR payload** (to display):
-   - Build URL: `https://www.okjike.com/account/scan?uuid=<uuid>`
+   - Build URL: `https://web.okjike.com/account/scan?uuid=<uuid>`
    - QR content: `jike://page.jk/web?url=<urlencoded URL>&displayHeader=false&displayFooter=false`
 3) **User scans & confirms** in Jike mobile app.
 4) **Poll for confirmation**: `GET https://api.ruguoapp.com/sessions.wait_for_confirmation?uuid=<uuid>` (poll every ~1s, timeout e.g. 3 min).
