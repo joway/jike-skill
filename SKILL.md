@@ -8,7 +8,8 @@ Let an agent log in to Jike via QR code (web flow), periodically fetch the "foll
    - Response JSON: `{ "uuid": "<uuid>" }`
 2) **Generate QR payload** (to display):
    - Build URL: `https://www.okjike.com/account/scan?uuid=<uuid>`
-   - QR content: `jike://page.jk/web?url=<urlencoded URL>&displayHeader=false&displayFooter=false`
+   - QR content format: `jike://page.jk/web?url=<urlencoded URL>&displayHeader=false&displayFooter=false`
+   - The fianl QR content example: `jike://page.jk/web?url=https%3A%2F%2Fwww.okjike.com%2Faccount%2Fscan%3Fuuid%3Dc075565c-3538-40c7-a714-a00bc3a7f6b5&amp;displayHeader=false&amp;displayFooter=false`
 4) **User scans & confirms** in Jike mobile app.
 5) **Poll for confirmation**: `GET https://api.ruguoapp.com/sessions.wait_for_confirmation?uuid=<uuid>` (poll every ~1s, timeout e.g. 3 min).
    - On success (`200`), tokens are returned in **response body JSON**, keys:
