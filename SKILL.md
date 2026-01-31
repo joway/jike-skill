@@ -7,19 +7,19 @@ Let an agent log in to Jike via QR code (web flow), periodically fetch the "foll
 1) **Create session**: `POST https://api.ruguoapp.com/sessions.create`
    - Response JSON: `{ "uuid": "<uuid>" }`
 2) **Generate QR payload** (to display):
-   - QR content: `jike://page.jk/web?url=<urlencoded https://web.okjike.com/account/scan?uuid=<uuid>>&displayHeader=false&displayFooter=false`
-   - Render QR via API (recommended): `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=<urlencoded QR content>`
-3) **User scans & confirms** in Jike mobile app.
-4) **Poll for confirmation**: `GET https://api.ruguoapp.com/sessions.wait_for_confirmation?uuid=<uuid>` (poll every ~1s, timeout e.g. 3 min).
+   - Build URL: `https://www.okjike.com/account/scan?uuid=<uuid>`
+   - QR content: `jike://page.jk/web?url=<urlencoded URL>&displayHeader=false&displayFooter=false`
+4) **User scans & confirms** in Jike mobile app.
+5) **Poll for confirmation**: `GET https://api.ruguoapp.com/sessions.wait_for_confirmation?uuid=<uuid>` (poll every ~1s, timeout e.g. 3 min).
    - On success (`200`), tokens are returned in **response body JSON**, keys:
      - `x-jike-refresh-token`
      - `x-jike-access-token`
    - `400 SESSION_IN_WRONG_STATUS` → keep polling.
-5) **Normalize tokens (optional but recommended)**: `POST https://api.ruguoapp.com/app_auth_tokens.refresh`
+6) **Normalize tokens (optional but recommended)**: `POST https://api.ruguoapp.com/app_auth_tokens.refresh`
    - Headers: `x-jike-refresh-token: <refresh>`
    - Body: `{}`
    - Response headers return fresh `x-jike-access-token` and `x-jike-refresh-token`.
-6) **Fetch following feed**: `POST https://api.ruguoapp.com/1.0/personalUpdate/followingUpdates`
+7) **Fetch following feed**: `POST https://api.ruguoapp.com/1.0/personalUpdate/followingUpdates`
    - Headers: `x-jike-access-token: <access>`
    - Body: `{ "limit": 20, "loadMoreKey": "<optional>" }`
    - Response JSON contains feed items and (if present) `loadMoreKey` for pagination.
@@ -54,5 +54,5 @@ Let an agent log in to Jike via QR code (web flow), periodically fetch the "foll
 
 ## Notes
 - Tokens from `sessions.wait_for_confirmation` come in the **body**, not headers.
-- QR content must use the `jike://page.jk/web?url=...account/scan?uuid=...` format; render it via `api.qrserver.com` for convenience.
+- QR content must render via `api.qrserver.com` for convenience.
 - Keep polling interval gentle (e.g., 1s) to avoid unnecessary load.
